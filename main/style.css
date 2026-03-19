@@ -1,0 +1,183 @@
+/* Zmienne kolorystyczne - Flat Design */
+:root {
+	--navy: #1a2b4c;
+	--gold: #c5a880;
+	--bg-light: #f8f9fa;
+	--white: #ffffff;
+	--text-main: #333333;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	background-color: var(--bg-light);
+	color: var(--text-main);
+	line-height: 1.6;
+}
+
+.container {
+	max-width: 1000px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+/* Hero Section */
+.hero-section {
+	background-color: var(--navy);
+	color: var(--white);
+	padding: 80px 0;
+	text-align: center;
+	border-bottom: 5px solid var(--gold);
+}
+
+.hero-section h1 {
+	font-size: 2.2rem;
+	margin-bottom: 15px;
+	line-height: 1.3;
+}
+
+.hero-section p {
+	font-size: 1.2rem;
+	color: var(--gold);
+}
+
+/* Sekcje z treścią */
+.content-section {
+	background-color: var(--white);
+	margin: 40px 0;
+	padding: 40px;
+	border-radius: 0;
+	border-left: 4px solid var(--navy);
+}
+
+.section-header {
+	display: flex;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.header-icon {
+	font-size: 2rem;
+	color: var(--navy);
+	margin-right: 15px;
+}
+
+h2 {
+	color: var(--navy);
+	font-size: 1.8rem;
+}
+
+/* Wykresy, grafiki i opisy */
+.chart-container {
+	margin-top: 30px;
+	display: flex;
+	flex-direction: column;
+	gap: 50px;
+}
+
+.chart-item {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.responsive-img {
+	width: 100%;
+	height: auto;
+	border: 1px solid #e0e0e0;
+}
+
+figcaption {
+	font-size: 0.95rem;
+	color: #555;
+	padding-left: 12px;
+	border-left: 3px solid var(--gold);
+	font-style: italic;
+	line-height: 1.4;
+}
+
+/* Kontener Mapy */
+.map-container {
+	margin-top: 20px;
+	background-color: var(--bg-light);
+	border: 2px solid var(--navy);
+}
+
+/* Lista techniczna - Poprawiony alignment */
+.tech-list {
+	list-style: none;
+	margin-top: 20px;
+}
+
+.tech-list li {
+	display: flex;
+	align-items: flex-start; /* Zmiana: pozwala ikonkom trzymać się góry tekstu */
+	margin-bottom: 15px;
+	font-size: 1.1rem;
+}
+
+.tech-list i {
+	color: var(--navy);
+	margin-right: 12px;
+	font-size: 1.2rem;
+	margin-top: 4px; /* Odsunięcie od góry, by zlicować ze środkiem pierwszej linijki tekstu */
+	flex-shrink: 0; /* Zabezpiecza ikonę przed zgnieceniem przez długi tekst */
+}
+
+/* Stopka */
+footer {
+	background-color: var(--navy);
+	color: var(--bg-light);
+	text-align: center;
+	padding: 20px 0;
+	margin-top: 60px;
+}
+
+/* =========================================================
+   MEDIA QUERIES (Responsywność dla smartfonów i tabletów)
+   ========================================================= */
+@media screen and (max-width: 768px) {
+	.hero-section {
+		padding: 50px 0;
+	}
+
+	.hero-section h1 {
+		font-size: 1.6rem;
+	}
+
+	.hero-section p {
+		font-size: 1rem;
+	}
+
+	.content-section {
+		margin: 20px 0;
+		padding: 20px;
+		border-left-width: 3px;
+	}
+
+	h2 {
+		font-size: 1.4rem;
+	}
+
+	.header-icon {
+		font-size: 1.6rem;
+		margin-right: 10px;
+	}
+
+	.chart-container {
+		gap: 35px;
+	}
+
+	.tech-list li {
+		font-size: 1rem;
+	}
+
+	.map-container iframe {
+		height: 400px; /* Nieco niższa ramka na małych ekranach, by nie zawłaszczała całego scrolla */
+	}
+}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformacja Przestrzenna Łodzi (2000-2018)</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+
+    <header class="hero-section">
+        <div class="container">
+            <h1>Dynamika zmian pokrycia terenu Łodzi a wskaźniki społeczno-ekonomiczne (2000-2018)</h1>
+            <p>Rozszerzenie analizy przestrzennej i społeczno-ekonomicznej dla lat 2000 - 2018.</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="content-section">
+            <div class="section-header">
+                <i class="ph ph-map-trifold header-icon"></i>
+                <h2>Interaktywna Mapa WebGIS</h2>
+            </div>
+            <p>Wektory po cięciu do granic administracyjnych miasta. Porównanie geometrii dla roku 2000 i 2018.</p>
+
+            <div class="map-container">
+                <iframe src="mapa.html" width="100%" height="500px" frameborder="0" style="border:0;"
+                    allowfullscreen></iframe>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="section-header">
+                <i class="ph ph-chart-bar header-icon"></i>
+                <h2>Szczegółowe statystyki</h2>
+            </div>
+            <p>Uzupełnienie bilansu powierzchniowego o dodatkowe parametry analityczne wygenerowane w środowisku R.</p>
+
+            <div class="chart-container">
+                <figure class="chart-item">
+                    <img src="/main/images/bilans.png" alt="Wykres podwójnych słupków 2000 vs 2018"
+                        class="responsive-img">
+                    <figcaption>Ryc. 1. Zestawienie bilansu zmian powierzchniowych dla poszczególnych stref (2000 -
+                        2018).</figcaption>
+                </figure>
+
+                <figure class="chart-item">
+                    <img src="/main/images/emisje.png" alt="Wykres rozbieżny zmian powierzchni" class="responsive-img">
+                    <figcaption>Ryc. 2. Wykres rozbieżny obrazujący dynamikę zmian emisji na wytypowanych poligonach.
+                    </figcaption>
+                </figure>
+
+                <figure class="chart-item">
+                    <img src="/main/images/fabryka.jpg" alt="Zdjęcie tkanki miejskiej" class="responsive-img">
+                    <figcaption>Fot. 1. Widok na obszar pofabryczny zakładu UNIONTEX w Łodzi.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="section-header">
+                <i class="ph ph-hard-drives header-icon"></i>
+                <h2>Metodyka i parametry projektu</h2>
+            </div>
+            <ul class="tech-list">
+                <li><i class="ph ph-check"></i>
+                    <div><strong>Źródło danych:</strong> Baza Corine Land Cover (Copernicus Land Monitoring Service).
+                    </div>
+                </li>
+                <li><i class="ph ph-check"></i>
+                    <div><strong>Układ współrzędnych:</strong> EPSG:3035 (ETRS89 / LAEA Europe).</div>
+                </li>
+                <li><i class="ph ph-check"></i>
+                    <div><strong>Geoprocessing:</strong> Cięcie wektorów do granic administracyjnych, rekalkulacja
+                        geometrii.</div>
+                </li>
+                <li><i class="ph ph-check"></i>
+                    <div><strong>Wizualizacja:</strong> Pakiet ggplot2 (R).</div>
+                </li>
+            </ul>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Jaremko, Bartkowiak, Górzyński</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
