@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="pl">
 
 <head>
     <meta charset="utf-8">
@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="css/leaflet.css">
     <link rel="stylesheet" href="css/qgis2web.css">
     <link rel="stylesheet" href="css/fontawesome-all.min.css">
-    <link rel="stylesheet" href="css/leaflet.photon.css">
     <link rel="stylesheet" href="css/leaflet-measure.css">
     <style>
         html,
@@ -22,9 +21,6 @@
             margin: 0;
         }
 
-        /* ----------------------------------------------------
-           FLAT DESIGN INTERFACE: Suwak Przezroczystości
-           ---------------------------------------------------- */
         .opacity-control {
             position: absolute;
             top: 20px;
@@ -32,23 +28,24 @@
             z-index: 1000;
             background: #FFFFFF;
             border-left: 4px solid #1A2B4C;
-            padding: 15px 20px;
+            padding: 12px 15px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             font-family: 'Segoe UI', sans-serif;
         }
 
         .opacity-control label {
             display: block;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
             color: #1A2B4C;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         input[type=range] {
             -webkit-appearance: none;
-            width: 200px;
+            width: 180px;
             background: transparent;
+            cursor: pointer;
         }
 
         input[type=range]::-webkit-slider-thumb {
@@ -57,373 +54,253 @@
             width: 16px;
             border-radius: 50%;
             background: #C5A880;
-            cursor: pointer;
             margin-top: -6px;
         }
 
         input[type=range]::-webkit-slider-runnable-track {
             width: 100%;
             height: 4px;
-            cursor: pointer;
             background: #1A2B4C;
         }
 
-        /* ----------------------------------------------------
-           FLAT DESIGN INTERFACE: Panel Warstw (Checkboxy)
-           ---------------------------------------------------- */
+        /* --- STYLIZACJA ETYKIET (PO NAJECHANIU) --- */
+        .leaflet-tooltip {
+            transition: none !important;
+            animation: none !important;
+        }
+
+        .leaflet-tooltip.custom-tooltip {
+            background-color: rgba(26, 43, 76, 0.95) !important;
+            color: #FFFFFF !important;
+            border: none !important;
+            border-radius: 4px !important;
+            box-shadow: none !important;
+            font-family: 'Segoe UI', sans-serif !important;
+            padding: 6px 10px !important;
+            font-size: 12px !important;
+            white-space: nowrap !important;
+        }
+
+        .leaflet-tooltip-top:before,
+        .leaflet-tooltip-bottom:before,
+        .leaflet-tooltip-left:before,
+        .leaflet-tooltip-right:before {
+            display: none !important;
+        }
+
+        /* --- STYLIZACJA POPUPÓW (PO KLIKNIĘCIU) --- */
+        .leaflet-popup-content-wrapper {
+            background-color: rgba(26, 43, 76, 0.95) !important;
+            color: #FFFFFF !important;
+            border-radius: 4px !important;
+            box-shadow: none !important;
+            font-family: 'Segoe UI', sans-serif !important;
+        }
+
+        .leaflet-popup-tip-container {
+            display: none !important;
+            /* Usuwa biały trójkąt pod okienkiem */
+        }
+
+        .leaflet-popup-content {
+            margin: 12px 16px !important;
+            font-size: 13px !important;
+            line-height: 1.6 !important;
+        }
+
+        .leaflet-popup-close-button {
+            color: #C5A880 !important;
+            /* Złoty krzyżyk zamykania */
+            font-size: 18px !important;
+            font-weight: bold !important;
+            padding: 4px 8px !important;
+            text-decoration: none !important;
+        }
+
+        .leaflet-popup-close-button:hover {
+            color: #FFFFFF !important;
+            background: transparent !important;
+        }
+
+        /* --- PANELE WARSTW I LEGENDY --- */
         .leaflet-control-layers {
             border-radius: 0 !important;
-            border: none !important;
             border-left: 4px solid #1A2B4C !important;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
             font-family: 'Segoe UI', sans-serif !important;
-            padding: 5px 10px !important;
-            background: #FFFFFF !important;
-            color: #1A2B4C !important;
             font-weight: bold;
         }
 
-        .leaflet-control-layers label {
-            margin-top: 5px;
-            margin-bottom: 5px;
-        }
-
-        /* ----------------------------------------------------
-           FLAT DESIGN INTERFACE: Rozsuwana Legenda
-           ---------------------------------------------------- */
         .custom-legend {
             background: #FFFFFF;
             border-left: 4px solid #1A2B4C;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             font-family: 'Segoe UI', sans-serif;
-            color: #1A2B4C;
-            pointer-events: auto;
-            max-width: 350px;
+            max-width: 300px;
         }
 
         .custom-legend .legend-header {
-            padding: 12px 15px;
+            padding: 10px 15px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 14px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             background-color: #F8F9FA;
-        }
-
-        .custom-legend .legend-header:hover {
-            background-color: #E9ECEF;
+            font-size: 13px;
         }
 
         .custom-legend .legend-body {
             display: none;
-            padding: 10px 15px 15px 15px;
-            max-height: 40vh;
+            padding: 10px;
+            max-height: 35vh;
             overflow-y: auto;
             border-top: 1px solid #E0E0E0;
-            font-size: 12px;
+            font-size: 11px;
         }
 
-        /* Klasa aktywująca rozwinięcie legendy */
         .custom-legend.expanded .legend-body {
             display: block;
         }
 
-        .custom-legend table {
-            border-collapse: collapse;
-            width: 100%;
-        }
+        @media screen and (max-width: 600px) {
+            .opacity-control {
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+            }
 
-        .custom-legend td {
-            padding: 4px 0;
-            vertical-align: middle;
-        }
+            input[type=range] {
+                width: 110px;
+            }
 
-        .custom-legend img {
-            width: 18px;
-            height: 18px;
-            border: 1px solid #CCC;
-            display: block;
-            margin-right: 8px;
+            .leaflet-control-layers {
+                margin-bottom: 15px !important;
+                margin-left: 10px !important;
+            }
+
+            .custom-legend {
+                margin-bottom: 15px !important;
+                margin-right: 10px !important;
+                max-width: 170px;
+            }
+
+            .custom-legend .legend-header {
+                font-size: 11px;
+                padding: 8px 10px;
+            }
+
+            .custom-legend .legend-body {
+                font-size: 10px;
+            }
         }
     </style>
-    <title></title>
 </head>
 
 <body>
-
     <div class="opacity-control">
-        <label for="layerOpacity">Przezroczystość warstw CLC</label>
-        <input type="range" id="layerOpacity" min="0" max="1" step="0.1" value="0.6">
+        <label for="layerOpacity">Przezroczystość CLC</label>
+        <input type="range" id="layerOpacity" min="0" max="1" step="0.1" value="0.7">
     </div>
-
-    <div id="map">
-    </div>
+    <div id="map"></div>
 
     <script src="js/qgis2web_expressions.js"></script>
     <script src="js/leaflet.js"></script>
-    <script src="js/leaflet.rotatedMarker.js"></script>
-    <script src="js/leaflet.pattern.js"></script>
-    <script src="js/leaflet-hash.js"></script>
     <script src="js/Autolinker.min.js"></script>
-    <script src="js/rbush.min.js"></script>
-    <script src="js/labelgun.min.js"></script>
-    <script src="js/labels.js"></script>
-    <script src="js/leaflet.photon.js"></script>
     <script src="js/leaflet-measure.js"></script>
-
     <script src="data/Corine_Lodz2018_0.js"></script>
     <script src="data/Corine_Lodz2000_1.js"></script>
 
     <script>
-        var map = L.map('map', {
-            zoomControl: false, maxZoom: 28, minZoom: 1
-        }).fitBounds([[51.56657748466, 19.116177174903164], [51.9830593371323, 19.92864182708758]]);
+        var map = L.map('map', { zoomControl: false, maxZoom: 28 }).fitBounds([[51.65, 19.25], [51.85, 19.70]]);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
 
-        var hash = new L.Hash(map);
-        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        map.createPane('pane_2018'); map.getPane('pane_2018').style.zIndex = 402;
+        map.createPane('pane_2000'); map.getPane('pane_2000').style.zIndex = 401;
 
-        // ---------------------------------------------------------
-        // PODKŁAD MAPOWY (CartoDB Positron - Flat Design)
-        // ---------------------------------------------------------
-        var basemap = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-            subdomains: 'abcd',
-            maxZoom: 20
-        });
-        basemap.addTo(map);
-
-        var autolinker = new Autolinker({ truncate: { length: 30, location: 'smart' } });
-
-        function removeEmptyRowsFromPopupContent(content, feature) {
-            var tempDiv = document.createElement('div');
-            tempDiv.innerHTML = content;
-            var rows = tempDiv.querySelectorAll('tr');
-            for (var i = 0; i < rows.length; i++) {
-                var td = rows[i].querySelector('td.visible-with-data');
-                var key = td ? td.id : '';
-                if (td && td.classList.contains('visible-with-data') && feature.properties[key] == null) {
-                    rows[i].parentNode.removeChild(rows[i]);
-                }
-            }
-            return tempDiv.innerHTML;
-        }
-
-        function addClassToPopupIfMedia(content, popup) {
-            var tempDiv = document.createElement('div');
-            tempDiv.innerHTML = content;
-            var imgTd = tempDiv.querySelector('td img');
-            if (imgTd) {
-                var src = imgTd.getAttribute('src');
-                if (/\.(jpg|jpeg|png|gif|bmp|webp|avif)$/i.test(src)) {
-                    popup._contentNode.classList.add('media');
-                    setTimeout(function () { popup.update(); }, 10);
-                } else {
-                    popup._contentNode.classList.remove('media');
-                }
-            } else {
-                popup._contentNode.classList.remove('media');
-            }
-        }
-
-        var zoomControl = L.control.zoom({ position: 'topleft' }).addTo(map);
-
-        var measureControl = new L.Control.Measure({
-            position: 'topleft',
-            primaryLengthUnit: 'meters',
-            secondaryLengthUnit: 'kilometers',
-            primaryAreaUnit: 'sqmeters',
-            secondaryAreaUnit: 'hectares'
-        });
-        measureControl.addTo(map);
-        document.getElementsByClassName('leaflet-control-measure-toggle')[0].innerHTML = '';
-        document.getElementsByClassName('leaflet-control-measure-toggle')[0].className += ' fas fa-ruler';
-
-        // ---------------------------------------------------------
-        // INICJALIZACJA WARSTWY: CLC 2018
-        // ---------------------------------------------------------
-        function pop_Corine_Lodz2018_0(feature, layer) {
-            var popupContent = '<table>\
-                    <tr><td colspan="2"><strong>Kod CLC: </strong>' + (feature.properties['Code_18'] !== null ? autolinker.link(String(feature.properties['Code_18'])) : '') + '</td></tr>\
-                    <tr><td colspan="2"><strong>Powierzchnia [ha]: </strong>' + (feature.properties['pow_ha'] !== null ? autolinker.link(String(feature.properties['pow_ha'])) : '') + '</td></tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-            layer.on('popupopen', function (e) { addClassToPopupIfMedia(content, e.popup); });
-            layer.bindPopup(content, { maxHeight: 400 });
-        }
-
-        function style_Corine_Lodz2018_0_0(feature) {
-            switch (String(feature.properties['Code_18'])) {
-                case '111': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(230,0,77,1.0)', interactive: true };
-                case '112': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(255,0,0,1.0)', interactive: true };
-                case '121': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(204,77,242,1.0)', interactive: true };
-                case '122': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(204,0,0,1.0)', interactive: true };
-                case '124': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(230,204,230,1.0)', interactive: true };
-                case '131': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(166,0,204,1.0)', interactive: true };
-                case '133': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(255,77,255,1.0)', interactive: true };
-                case '141': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(255,166,255,1.0)', interactive: true };
-                case '142': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(255,230,255,1.0)', interactive: true };
-                case '211': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(255,255,168,1.0)', interactive: true };
-                case '231': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(230,230,77,1.0)', interactive: true };
-                case '242': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(255,230,77,1.0)', interactive: true };
-                case '243': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(230,204,77,1.0)', interactive: true };
-                case '311': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(128,255,0,1.0)', interactive: true };
-                case '312': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(0,166,0,1.0)', interactive: true };
-                case '313': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(77,255,0,1.0)', interactive: true };
-                case '324': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(166,242,0,1.0)', interactive: true };
-            }
-        }
-
-        map.createPane('pane_Corine_Lodz2018_0');
-        map.getPane('pane_Corine_Lodz2018_0').style.zIndex = 400;
-
-        var layer_Corine_Lodz2018_0 = new L.geoJson(json_Corine_Lodz2018_0, {
-            interactive: true,
-            pane: 'pane_Corine_Lodz2018_0',
-            onEachFeature: pop_Corine_Lodz2018_0,
-            style: style_Corine_Lodz2018_0_0,
-        });
-        map.addLayer(layer_Corine_Lodz2018_0);
-
-        // ---------------------------------------------------------
-        // INICJALIZACJA WARSTWY: CLC 2000
-        // ---------------------------------------------------------
-        function pop_Corine_Lodz2000_1(feature, layer) {
-            var popupContent = '<table>\
-                    <tr><td colspan="2"><strong>Kod CLC: </strong>' + (feature.properties['code_00'] !== null ? autolinker.link(String(feature.properties['code_00'])) : '') + '</td></tr>\
-                    <tr><td colspan="2"><strong>Powierzchnia [ha]: </strong>' + (feature.properties['pow_ha'] !== null ? autolinker.link(String(feature.properties['pow_ha'])) : '') + '</td></tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-            layer.on('popupopen', function (e) { addClassToPopupIfMedia(content, e.popup); });
-            layer.bindPopup(content, { maxHeight: 400 });
-        }
-
-        function style_Corine_Lodz2000_1_0(feature) {
-            switch (String(feature.properties['code_00'])) {
-                case '111': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(230,0,77,1.0)', interactive: true };
-                case '112': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(255,0,0,1.0)', interactive: true };
-                case '121': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(204,77,242,1.0)', interactive: true };
-                case '122': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(204,0,0,1.0)', interactive: true };
-                case '124': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(230,204,230,1.0)', interactive: true };
-                case '131': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(166,0,204,1.0)', interactive: true };
-                case '133': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(255,77,255,1.0)', interactive: true };
-                case '141': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(255,166,255,1.0)', interactive: true };
-                case '142': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(255,230,255,1.0)', interactive: true };
-                case '211': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(255,255,168,1.0)', interactive: true };
-                case '231': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(230,230,77,1.0)', interactive: true };
-                case '242': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(255,230,77,1.0)', interactive: true };
-                case '243': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(230,204,77,1.0)', interactive: true };
-                case '311': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(128,255,0,1.0)', interactive: true };
-                case '312': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(0,166,0,1.0)', interactive: true };
-                case '313': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(77,255,0,1.0)', interactive: true };
-                case '324': return { stroke: false, fill: true, fillOpacity: 1, fillColor: 'rgba(166,242,0,1.0)', interactive: true };
-            }
-        }
-
-        map.createPane('pane_Corine_Lodz2000_1');
-        map.getPane('pane_Corine_Lodz2000_1').style.zIndex = 401;
-
-        var layer_Corine_Lodz2000_1 = new L.geoJson(json_Corine_Lodz2000_1, {
-            interactive: true,
-            pane: 'pane_Corine_Lodz2000_1',
-            onEachFeature: pop_Corine_Lodz2000_1,
-            style: style_Corine_Lodz2000_1_0,
-        });
-        map.addLayer(layer_Corine_Lodz2000_1);
-
-        // ---------------------------------------------------------
-        // CHECKBOXY WARSTW (Lewy Dolny Róg)
-        // ---------------------------------------------------------
-        var overlayLayers = {
-            "CLC 2018 (Aktualne)": layer_Corine_Lodz2018_0,
-            "CLC 2000 (Archiwum)": layer_Corine_Lodz2000_1
+        var clcDict = {
+            '111': 'Zabudowa miejska zwarta', '112': 'Zabudowa miejska luźna',
+            '121': 'Tereny przemysłowe/handlowe', '122': 'Tereny komunikacyjne',
+            '124': 'Lotniska', '131': 'Eksploatacja odkrywkowa', '133': 'Budowy',
+            '141': 'Tereny zielone', '142': 'Tereny sportowe',
+            '211': 'Grunty orne', '231': 'Łąki i pastwiska', '242': 'Systemy upraw i działek',
+            '243': 'Tereny rolnicze/naturalne',
+            '311': 'Lasy liściaste', '312': 'Lasy iglaste', '313': 'Lasy mieszane',
+            '324': 'Lasy/Krzewy (stan zmian)'
         };
 
-        // Standardowy kontroler dodany do lewego dolnego rogu na zawsze rozłożony
-        L.control.layers(null, overlayLayers, {
-            collapsed: false,
-            position: 'bottomleft'
+        function getClcColor(c) {
+            var colors = { '111': '#e6004d', '112': '#ff0000', '121': '#cc4df2', '122': '#cc0000', '124': '#e6cce6', '131': '#a600cc', '133': '#ff4dff', '141': '#ffa6ff', '142': '#ffe6ff', '211': '#ffffa8', '231': '#e6e64d', '242': '#ffe64d', '243': '#e6cc4d', '311': '#80ff00', '312': '#00a600', '313': '#4dff00', '324': '#a6f200' };
+            return colors[c] || '#cccccc';
+        }
+
+        function setupLayer(feature, layer, codeKey) {
+            var code = String(feature.properties[codeKey]);
+            var name = clcDict[code] || "Kod CLC: " + code;
+            var area = feature.properties['pow_ha'] ? feature.properties['pow_ha'].toFixed(2) : "?";
+
+            // Konfiguracja etykiety z wyłączoną animacją
+            layer.bindTooltip(name, {
+                sticky: true,
+                className: 'custom-tooltip'
+            });
+
+            // Wymuszenie czyszczenia etykiety po opuszczeniu wektora kursorem
+            layer.on('mouseout', function () {
+                layer.closeTooltip();
+            });
+
+            // Konfiguracja Popupa
+            layer.bindPopup("<strong>Typ:</strong> " + name + "<br><strong>Powierzchnia:</strong> " + area + " ha");
+        }
+
+        function getLayerStyle(feature, codeKey) {
+            var color = getClcColor(feature.properties[codeKey]);
+            return { stroke: true, color: color, weight: 0.5, fillOpacity: 1.0, fillColor: color, interactive: true };
+        }
+
+        var layer_2018 = L.geoJson(json_Corine_Lodz2018_0, {
+            pane: 'pane_2018',
+            style: function (f) { return getLayerStyle(f, 'Code_18'); },
+            onEachFeature: function (f, l) { setupLayer(f, l, 'Code_18'); }
         }).addTo(map);
 
-        // ---------------------------------------------------------
-        // WYSUWANY PANEL LEGENDY (Prawy Dolny Róg)
-        // ---------------------------------------------------------
+        var layer_2000 = L.geoJson(json_Corine_Lodz2000_1, {
+            pane: 'pane_2000',
+            style: function (f) { return getLayerStyle(f, 'code_00'); },
+            onEachFeature: function (f, l) { setupLayer(f, l, 'code_00'); }
+        });
+
+        L.control.layers(null, {
+            "CLC 2018 (Aktualne)": layer_2018,
+            "CLC 2000 (Archiwum)": layer_2000
+        }, { collapsed: false, position: 'bottomleft' }).addTo(map);
+
+        document.getElementById('layerOpacity').addEventListener('input', function (e) {
+            var v = parseFloat(e.target.value);
+            [layer_2018, layer_2000].forEach(l => l.setStyle({ fillOpacity: v, opacity: v }));
+        });
+
         var CustomLegend = L.Control.extend({
             options: { position: 'bottomright' },
-            onAdd: function (map) {
-                var container = L.DomUtil.create('div', 'custom-legend');
+            onAdd: function () {
+                var c = L.DomUtil.create('div', 'custom-legend');
+                var h = L.DomUtil.create('div', 'legend-header', c);
+                h.innerHTML = '<i class="fas fa-list"></i> Legenda';
+                var b = L.DomUtil.create('div', 'legend-body', c);
+                b.innerHTML = '<table>' + Object.keys(clcDict).map(k => `<tr><td><div style="width:12px;height:12px;background:${getClcColor(k)};margin-right:6px;border:1px solid #999"></div></td><td>${clcDict[k]}</td></tr>`).join('') + '</table>';
 
-                // Nagłówek aktywujący
-                var header = L.DomUtil.create('div', 'legend-header', container);
-                header.innerHTML = '<i class="fas fa-list"></i> Legenda Klasifikacji CLC';
+                h.onclick = function () {
+                    c.classList.toggle('expanded');
+                };
 
-                // Ciało z tabelą wyciągniętą ze starego kodu
-                var body = L.DomUtil.create('div', 'legend-body', container);
-                body.innerHTML = '<table>\
-                    <tr><td><img src="legend/Corine_Lodz2018_0_Zabudowamiejskazwarta0.png" /></td><td>Zabudowa miejska zwarta</td></tr>\
-                    <tr><td><img src="legend/Corine_Lodz2018_0_Zabudowamiejskaluźna1.png" /></td><td>Zabudowa miejska luźna</td></tr>\
-                    <tr><td><img src="legend/Corine_Lodz2018_0_Terenyprzemysłowelubhandlowe2.png" /></td><td>Tereny przemysłowe lub handlowe</td></tr>\
-                    <tr><td><img src="legend/Corine_Lodz2018_0_Terenykomunikacyjne3.png" /></td><td>Tereny komunikacyjne</td></tr>\
-                    <tr><td><img src="legend/Corine_Lodz2018_0_Lotniska4.png" /></td><td>Lotniska</td></tr>\
-                    <tr><td><img src="legend/Corine_Lodz2018_0_Miejsceesploatacjiodkrywkowej5.png" /></td><td>Miejsce esploatacji odkrywkowej</td></tr>\
-                    <tr><td><img src="legend/Corine_Lodz2018_0_Budowy6.png" /></td><td>Budowy</td></tr>\
-                    <tr><td><img src="legend/Corine_Lodz2018_0_Terenyzielone7.png" /></td><td>Tereny zielone</td></tr>\
-                    <tr><td><img src="legend/Corine_Lodz2018_0_Terenysportoweiwypoczynkowe8.png" /></td><td>Tereny sportowe i wypoczynkowe</td></tr>\
-                    <tr><td><img src="legend/Corine_Lodz2018_0_Gruntyornepozazasięgiemurządzeńnawadniających9.png" /></td><td>Grunty orne poza zasięgiem urządzeń nawadniających</td></tr>\
-                    <tr><td><img src="legend/Corine_Lodz2018_0_Łąkiipastwiska10.png" /></td><td>Łąki i pastwiska</td></tr>\
-                    <tr><td><img src="legend/Corine_Lodz2018_0_Złożonesystemyuprawidziałek11.png" /></td><td>Złożone systemy upraw i działek</td></tr>\
-                    <tr><td><img src="legend/Corine_Lodz2018_0_Terenyzajętegłównieprzezrolnictwozdużymudziałemterenównaturalnych12.png" /></td><td>Tereny zajęte głównie przez rolnictwo z dużym udziałem terenów naturalnych</td></tr>\
-                    <tr><td><img src="legend/Corine_Lodz2018_0_Lasyliściaste13.png" /></td><td>Lasy liściaste</td></tr>\
-                    <tr><td><img src="legend/Corine_Lodz2018_0_Lasyiglaste14.png" /></td><td>Lasy iglaste</td></tr>\
-                    <tr><td><img src="legend/Corine_Lodz2018_0_Lasymieszane15.png" /></td><td>Lasy mieszane</td></tr>\
-                    <tr><td><img src="legend/Corine_Lodz2018_0_Lasyiroslinnośćkrzewiastawstaniezmian16.png" /></td><td>Lasy i roslinność krzewiasta w stanie zmian</td></tr>\
-                </table>';
-
-                // Mechanika zwijania/rozwijania
-                L.DomEvent.on(header, 'click', function () {
-                    if (L.DomUtil.hasClass(container, 'expanded')) {
-                        L.DomUtil.removeClass(container, 'expanded');
-                    } else {
-                        L.DomUtil.addClass(container, 'expanded');
-                    }
-                });
-
-                // Blokowanie propagacji kliknięć (żeby mapa pod spodem nie reagowała na klikanie w legendę)
-                L.DomEvent.disableClickPropagation(container);
-                L.DomEvent.disableScrollPropagation(container);
-
-                return container;
+                L.DomEvent.disableClickPropagation(c);
+                L.DomEvent.disableScrollPropagation(c);
+                return c;
             }
         });
         map.addControl(new CustomLegend());
 
-        // ---------------------------------------------------------
-        // LOGIKA SUWAKA PRZEZROCZYSTOŚCI
-        // ---------------------------------------------------------
-        var opacitySlider = document.getElementById('layerOpacity');
-
-        opacitySlider.addEventListener('input', function (e) {
-            var opValue = parseFloat(e.target.value);
-
-            if (typeof layer_Corine_Lodz2000_1 !== 'undefined') {
-                layer_Corine_Lodz2000_1.setStyle({
-                    fillOpacity: opValue,
-                    opacity: opValue
-                });
-            }
-
-            if (typeof layer_Corine_Lodz2018_0 !== 'undefined') {
-                layer_Corine_Lodz2018_0.setStyle({
-                    fillOpacity: opValue,
-                    opacity: opValue
-                });
-            }
-        });
-
-        // Wymuszenie zaaplikowania przezroczystości podczas startu
-        opacitySlider.dispatchEvent(new Event('input'));
-
+        document.getElementById('layerOpacity').dispatchEvent(new Event('input'));
     </script>
 </body>
 
