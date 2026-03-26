@@ -13,6 +13,16 @@
 	box-sizing: border-box;
 }
 
+/* Globalny reset ramek po kliknięciu */
+*:focus {
+	outline: none !important;
+}
+iframe:focus,
+.map-container:focus {
+	outline: none !important;
+	border-color: var(--navy) !important;
+}
+
 body {
 	font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 	background-color: var(--bg-light);
@@ -116,7 +126,7 @@ figcaption {
 
 .tech-list li {
 	display: flex;
-	align-items: flex-start; /* Zmiana: pozwala ikonkom trzymać się góry tekstu */
+	align-items: flex-start;
 	margin-bottom: 15px;
 	font-size: 1.1rem;
 }
@@ -125,8 +135,8 @@ figcaption {
 	color: var(--navy);
 	margin-right: 12px;
 	font-size: 1.2rem;
-	margin-top: 4px; /* Odsunięcie od góry, by zlicować ze środkiem pierwszej linijki tekstu */
-	flex-shrink: 0; /* Zabezpiecza ikonę przed zgnieceniem przez długi tekst */
+	margin-top: 4px;
+	flex-shrink: 0;
 }
 
 /* Stopka */
@@ -178,6 +188,6 @@ footer {
 	}
 
 	.map-container iframe {
-		height: 400px; /* Nieco niższa ramka na małych ekranach, by nie zawłaszczała całego scrolla */
+		height: 400px;
 	}
 }
