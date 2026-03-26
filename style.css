@@ -56,6 +56,13 @@ body {
 	color: var(--gold);
 }
 
+.wprowadzenie {
+	font-size: 1.1rem;
+	color: var(--navy);
+	margin-top: 0px;
+	line-height: 1.5;
+}
+
 /* Sekcje z treścią */
 .content-section {
 	background-color: var(--white);
@@ -68,7 +75,7 @@ body {
 .section-header {
 	display: flex;
 	align-items: center;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 }
 
 .header-icon {
